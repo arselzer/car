@@ -1,7 +1,7 @@
 var http = require("http")
 var exec = require("child_process").exec
 var static = require("node-static")
-var car = require("./car")
+var car = require("./car.js")
 
 exec("./mjpgstreamer/start.sh", function(err) {
   if (err) {
@@ -19,16 +19,19 @@ var server = http.createServer(function(req, res) {
 
 var io = require("socket.io")(server)
 
+car.init()
+
 io.on("connection", function(socket) {
   socket.on("cmd", function(data) {
+    console.log(data)
     if (data.cmd === "direction") {
-      car.setDirection(data.direction)
+      car.setDirection(data.value)
     }
     else if (data.cmd === "servo") {
-      car.setServo(data.degrees)
+      car.setServo(data.value)
     }
     else if (data.cmd === "speed") {
-      car.setSpeed(data.speed)
+      car.setSpeed(data.value)
     }
     else if (data.cmd === "ir-led") {
       car.setPin(7, data.state)

@@ -102,7 +102,8 @@ LDFLAGS_Release := \
 	-rdynamic
 
 LIBS := \
-	/usr/lib/libwiringPi.so
+	/usr/lib/libwiringPi.so \
+	/usr/lib/libpthread.so
 
 $(obj).target/car.node: GYP_LDFLAGS := $(LDFLAGS_$(BUILDTYPE))
 $(obj).target/car.node: LIBS := $(LIBS)

@@ -1,6 +1,7 @@
 #include <node.h>
 #include <nan.h>
 #include <wiringPi.h>
+#include <softPwm.h>
 
 using v8::Number;
 using v8::FunctionTemplate;
@@ -38,6 +39,15 @@ NAN_METHOD(SetDirection) {
   }
 }
 
+NAN_METHOD(SetSpeed) {
+  NanScope();
+
+  int speed = args[0]->Uint32Value();
+
+  // TODO: pwm speed
+  digitalWrite(21, speed);
+}
+
 NAN_METHOD(SetServo) {
   int pos = args[0]-> Uint32Value();
 
@@ -49,6 +59,8 @@ void init(Handle<Object> exports) {
   exports->Set(NanNew<String>("setDirection"),
       NanNew<FunctionTemplate>(SetDirection)->GetFunction());
 
+  exports->Set(NanNew<String>("setSpeed"),
+      NanNew<FunctionTemplate>(SetSpeed)->GetFunction());
 
   exports->Set(NanNew<String>("setServo"),
       NanNew<FunctionTemplate>(SetServo)->GetFunction());

@@ -1,1 +1,1 @@
-cmd_Release/obj.target/car.node := flock ./Release/linker.lock g++ -shared -pthread -rdynamic  -Wl,-soname=car.node -o Release/obj.target/car.node -Wl,--start-group Release/obj.target/car/car.o -Wl,--end-group /usr/lib/libwiringPi.so
+cmd_Release/obj.target/car.node := flock ./Release/linker.lock g++ -shared -pthread -rdynamic  -Wl,-soname=car.node -o Release/obj.target/car.node -Wl,--start-group Release/obj.target/car/car.o -Wl,--end-group /usr/lib/libwiringPi.so /usr/lib/libpthread.so
