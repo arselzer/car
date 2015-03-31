@@ -1,4 +1,4 @@
 #!/bin/sh
-export LD_LIBRARY_PATH="$(pwd)"
+dir=`dirname $0`
 
-./mjpg_streamer -i "./input_raspicam.so -vf -x 1280 -y 720 -fps 24 -ex night" -o "./output_http.so"
+LD_LIBRARY_PATH=$dir/ $dir/mjpg_streamer -i "$dir/input_raspicam.so -vf -x 1280 -y 720 -fps 24" -o "$dir/output_http.so"
