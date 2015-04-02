@@ -10,6 +10,7 @@ var menu = {
 
 var state = {
   speed: 0,
+  servo: 50,
   light: false,
   irLed: false
 }
@@ -20,8 +21,14 @@ socket.emit("cmd", {
   value: 0
 })
 socket.emit("cmd", {
-  cmd: "ir-speed",
+  cmd: "ir-led",
   value: 0
+})
+
+// set servo to middle position
+socket.emit("cmd", {
+  cmd: "servo",
+  value: state.servo
 })
 
 menu.light.onclick = function() {
@@ -81,7 +88,6 @@ document.onkeydown = function(e) {
     })
   }
 
-
   // left turn
   if (key === "A") {
     socket.emit("cmd", {
@@ -98,3 +104,46 @@ document.onkeydown = function(e) {
     })
   }
 }
+
+var gamma = null, beta = null
+
+var gyroAvailable = false
+
+window.ondeviceorientation = function(e) {
+  if (e.gamma !== null) {
+    gyroAvailable = true
+
+    // gamma = speed
+    // beta = left / right
+    var dGamma = e.gamma - gamma,
+        dBeta = e.beta - beta
+
+    gamma = e.gamma
+    beta = e.beta
+
+    state.speed = state.speed + dGamma * 6
+    if (state.speed > 100) state.speed = 100
+    if (state.speed < -100) state.speed = -100
+
+    state.servo = state.servo + dBeta
+    if (state.servo > 100) state.servo = 100
+    if (state.servo < 0) state.servo = 0
+  }
+}
+
+//if (gyroAvailable) {
+  setInterval(function() {
+      socket.emit("cmd", {
+        cmd: "speed",
+        value: Math.round(state.speed)
+      })
+  }, 40)
+
+
+  setInterval(function() {
+      socket.emit("cmd", {
+        cmd: "servo",
+        value: Math.round(state.servo)
+      })
+  }, 80)
+//}
