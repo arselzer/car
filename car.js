@@ -5,7 +5,17 @@ module.exports.init = car.init
 module.exports.setDirection = car.setDirection
 
 module.exports.setSpeed = function(speed) {
-  car.setSpeed(speed)
+  console.log(speed)
+  if (speed < 0) {
+    console.log("forward")
+    car.setDirection(1)
+  }
+  else {
+    console.log("backward")
+    car.setDirection(0)
+  }
+
+  car.setSpeed(Math.abs(speed))
 }
 
 module.exports.setServo = function(pos) {
@@ -20,3 +30,4 @@ module.exports.setServo = function(pos) {
   }
 }
 
+module.exports.setPin = car.setPin

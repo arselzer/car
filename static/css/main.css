@@ -7,3 +7,27 @@ body {
 #stream {
   width: 100%;
 }
+
+.menu {
+  width: 64px;
+  position: fixed;
+  top: 4px;
+  right: 12px;
+}
+
+.menu .item {
+  margin-top: 8px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.menu .item.active {
+  background-color: rgba(134, 134, 134, 0.6);
+}
+
+.menu .item .name {
+  text-align: center;
+  font-family: helvetica, arial, sans-serif;
+  font-size: 12px;
+  color: rgb(213, 213, 213);
+}

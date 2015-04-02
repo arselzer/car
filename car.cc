@@ -14,14 +14,18 @@ using v8::String;
 
 NAN_METHOD(Init) {
   wiringPiSetup();
-  pinMode(21, OUTPUT);
-  pinMode(22, OUTPUT);
-  pinMode(23, OUTPUT);
+  pinMode(22, OUTPUT); // motor forward/backward
+  pinMode(23, OUTPUT); // ^
+  softPwmCreate(21, 0, 100); // Motor Controller PWM
 
-  pinMode(1, PWM_OUTPUT);
+  pinMode(1, PWM_OUTPUT); // Servo PWM
   pwmSetMode(PWM_MODE_MS);
   pwmSetClock(400);
   pwmSetRange(1000);
+
+
+  pinMode(0, OUTPUT); // Light
+  pinMode(7, OUTPUT); // IR
 }
 
 NAN_METHOD(SetDirection) {
@@ -44,8 +48,7 @@ NAN_METHOD(SetSpeed) {
 
   int speed = args[0]->Uint32Value();
 
-  // TODO: pwm speed
-  digitalWrite(21, speed);
+  softPwmWrite(21, speed);
 }
 
 NAN_METHOD(SetServo) {
@@ -53,6 +56,16 @@ NAN_METHOD(SetServo) {
 
   if (pos >= 60 && pos <= 90)
     pwmWrite(1, pos);
+}
+
+
+NAN_METHOD(SetPin) {
+  NanScope();
+
+  int pin = args[0]->Uint32Value();
+  int value = args[1]->Uint32Value();
+
+  digitalWrite(pin, value);
 }
 
 void init(Handle<Object> exports) {
@@ -64,6 +77,9 @@ void init(Handle<Object> exports) {
 
   exports->Set(NanNew<String>("setServo"),
       NanNew<FunctionTemplate>(SetServo)->GetFunction());
+
+  exports->Set(NanNew<String>("setPin"),
+      NanNew<FunctionTemplate>(SetPin)->GetFunction());
 
   exports->Set(NanNew<String>("init"),
       NanNew<FunctionTemplate>(Init)->GetFunction());
